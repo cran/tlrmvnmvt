@@ -1,0 +1,6 @@
+pmvn.genz Compute the multivariate normal probability with the classic method in Genz's 92 paper
+pmvt.genz Compute the multivariate Student-t probability with the classic method in Genz's 92 paper
+pmvn.tlr Compute the multivariate normal probability with the tile-low-rank method 
+pmvt.tlr Compute the multivariate Student-t probability with the tile-low-rank method 
+zorder Compute the index of a 2D geometry in the unit square based on a Z-order curve
+

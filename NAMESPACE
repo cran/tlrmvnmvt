@@ -1,0 +1,3 @@
+useDynLib(tlrmvnmvt)
+importFrom(Rcpp, evalCpp)
+export(pmvn.genz, pmvn.tlr, pmvt.genz, pmvt.tlr, zorder)
