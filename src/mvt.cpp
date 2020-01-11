@@ -20,7 +20,8 @@ using namespace Eigen;
 		exponent of 0
 	2019/09/26
 */
-int mvt(int N, double nu, const MatrixXd& L, const VectorXd &a1, const VectorXd &b1, 
+int mvt(int N, double nu, const VectorXd &mu, const MatrixXd& L, 
+	const VectorXd &a1, const VectorXd &b1, 
 	double& v, double& e, int ns, int &scaler_in, double *workDbl, int lworkDbl,
 	int *workInt, int lworkInt)
 {
@@ -88,6 +89,8 @@ int mvt(int N, double nu, const MatrixXd& L, const VectorXd &a1, const VectorXd 
 		// scale a, b
                 a.noalias() = a1 * s;
                 b.noalias() = b1 * s;
+		a.colwise() -= mu;
+		b.colwise() -= mu;
 		// kernel
                 mvndns(n, N<<1, L, x, a, b, pN, y, n, scaler_N, subworkDbl, 
 			lsubworkDbl, subworkInt, lsubworkInt);

@@ -60,10 +60,12 @@ Rcpp::List mvn_internal(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 		covM.noalias() = covM * diagM;
 	}
 	// mem alloc
-	int lworkDbl = 9*n*N + n + ns + 14*N;;
-	int lworkInt = 4*N + n + ns + 1;;
-	double *workDbl = new double[lworkDbl];
-	int *workInt = new int[lworkInt];
+	int lworkDbl = 9*n*N + n + ns + 14*N;
+	int lworkInt = max(4*N + n + ns + 1, 2*n);
+	double *workDbl;
+	int *workInt;
+	workDbl = new double[lworkDbl];
+	workInt = new int[lworkInt];
 	// uni reorder
 	start = std::chrono::steady_clock::now();
 	double *y = workDbl;
@@ -91,6 +93,9 @@ Rcpp::List mvn_internal(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 	mvn(N, covM, a, b, v, e, ns, scaler, workDbl, lworkDbl, workInt, lworkInt);
 	end = std::chrono::steady_clock::now();
 	timeInt = std::chrono::duration<double>(end - start).count();
+	// mem release
+	delete[] workDbl;
+	delete[] workInt;
 	// return a list
 	if(useLog2)
 	{
@@ -107,11 +112,6 @@ Rcpp::List mvn_internal(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 			Rcpp::Named("Univariate reordering time") = timeChol,
 			Rcpp::Named("Monte Carlo time") = timeInt);
 	}
-
-
-	// mem release
-	delete[] workDbl;
-	delete[] workInt;
 }
 
 // [[Rcpp::export]]
@@ -145,8 +145,8 @@ Rcpp::List mvn_internal2(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 	end = std::chrono::steady_clock::now();
 	timeCovM = std::chrono::duration<double>(end - start).count();
 	// mem alloc
-	int lworkDbl = 9*n*N + n + ns + 14*N;;
-	int lworkInt = 4*N + n + ns + 1;;
+	int lworkDbl = 9*n*N + n + ns + 14*N;
+	int lworkInt = max(4*N + n + ns + 1, 2*n);
 	double *workDbl = new double[lworkDbl];
 	int *workInt = new int[lworkInt];
 	// uni reorder
@@ -176,6 +176,9 @@ Rcpp::List mvn_internal2(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 	mvn(N, covM, a, b, v, e, ns, scaler, workDbl, lworkDbl, workInt, lworkInt);
 	end = std::chrono::steady_clock::now();
 	timeInt = std::chrono::duration<double>(end - start).count();
+	// mem release
+	delete[] workDbl;
+	delete[] workInt;
 	// return a list
 	if(useLog2)
 	{
@@ -194,11 +197,6 @@ Rcpp::List mvn_internal2(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 			Rcpp::Named("Univariate reordering time") = timeChol,
 			Rcpp::Named("Monte Carlo time") = timeInt);
 	}
-
-
-	// mem release
-	delete[] workDbl;
-	delete[] workInt;
 }
 
 // [[Rcpp::export]]
@@ -249,7 +247,7 @@ Rcpp::List tlrmvn_internal(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 	// mem alloc
 	if(lastBlkDim > 0) n += m - lastBlkDim;
 	int lworkDbl = max(19*m*m+16*m+4*n, (5*n + 4*m + 19)*N + ns + m);
-	int lworkInt = 4*N + 2*n + 2*m + ns + 1;;
+	int lworkInt = 4*N + 2*n + 2*m + ns + 1;
 	double *workDbl = new double[lworkDbl];
 	int *workInt = new int[lworkInt];
 	// recur blk reorder
@@ -290,6 +288,9 @@ Rcpp::List tlrmvn_internal(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 	int rkSum = 0;
 	for(auto &tile : UV) rkSum += tile.crtColNum;
 	int rkAvg = rkSum / UV.size();
+	// mem release
+	delete[] workDbl;
+	delete[] workInt;
 	// return a list
 	if(useLog2)
 	{
@@ -310,11 +311,6 @@ Rcpp::List tlrmvn_internal(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixXd
 			Rcpp::Named("Monte Carlo time") = timeInt,
 			Rcpp::Named("Average rank") = rkAvg);
 	}
-
-
-	// mem release
-	delete[] workDbl;
-	delete[] workInt;
 }
 
 // [[Rcpp::export]]
@@ -376,7 +372,7 @@ Rcpp::List tlrmvn_internal2(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixX
 	// mem alloc
 	if(lastBlkDim > 0) n += m - lastBlkDim;
 	int lworkDbl = max(19*m*m+16*m+4*n, (5*n + 4*m + 19)*N + ns + m);
-	int lworkInt = 4*N + 2*n + 2*m + ns + 1;;
+	int lworkInt = 4*N + 2*n + 2*m + ns + 1;
 	double *workDbl = new double[lworkDbl];
 	int *workInt = new int[lworkInt];
 	// recur blk reorder
@@ -414,6 +410,9 @@ Rcpp::List tlrmvn_internal2(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixX
 	int rkSum = 0;
 	for(auto &tile : UV) rkSum += tile.crtColNum;
 	int rkAvg = rkSum / UV.size();
+	// mem release
+	delete[] workDbl;
+	delete[] workInt;
 	// return a list
 	if(useLog2)
 	{
@@ -434,16 +433,11 @@ Rcpp::List tlrmvn_internal2(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::MatrixX
 			Rcpp::Named("Monte Carlo time") = timeInt,
 			Rcpp::Named("Average rank") = rkAvg);
 	}
-
-
-	// mem release
-	delete[] workDbl;
-	delete[] workInt;
 }
 
 // [[Rcpp::export]]
-Rcpp::List mvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu, 
-	Eigen::MatrixXd covM, bool useLog2, int N)
+Rcpp::List mvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::VectorXd mu,
+	double nu, Eigen::MatrixXd covM, bool useLog2, int N)
 {
 	// tmp var
 	int n = covM.rows();
@@ -461,12 +455,13 @@ Rcpp::List mvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 		auto diagM = diagVec.asDiagonal();
 		a.noalias() = diagM * a;
 		b.noalias() = diagM * b;
+		mu.noalias() = diagM * mu;
 		covM.noalias() = diagM * covM;
 		covM.noalias() = covM * diagM;
 	}
 	// mem alloc
 	int lworkDbl = 9*n*N + n + ns + 17*N;
-	int lworkInt = 4*N + n + ns + 1;;
+	int lworkInt = max(4*N + n + ns + 1, 2*n);
 	double *workDbl = new double[lworkDbl];
 	int *workInt = new int[lworkInt];
 	// uni reorder
@@ -481,6 +476,10 @@ Rcpp::List mvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 	int lsubworkInt = n;
 	copy(a.data(), a.data()+n, acp);
 	copy(b.data(), b.data()+n, bcp);
+	transform(acp, acp+n, mu.data(), acp, [](double a, double mu){
+		return a - mu;});
+	transform(bcp, bcp+n, mu.data(), bcp, [](double b, double mu){
+		return b - mu;});
 	iota(idx, idx+n, 0);
 	fail = uni_reorder(n, covM.data(), covM.rows(), acp, bcp, v, y, idx, 
 		subworkDbl, lsubworkDbl);
@@ -489,14 +488,18 @@ Rcpp::List mvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 			"of the input covariance matrix\n");
 	reorder(a.data(), idx, n, subworkInt, lsubworkInt);
 	reorder(b.data(), idx, n, subworkInt, lsubworkInt);
+	reorder(mu.data(), idx, n, subworkInt, lsubworkInt);
 	end = std::chrono::steady_clock::now();
 	timeChol = std::chrono::duration<double>(end - start).count();
 	// call the mvt function
 	start = std::chrono::steady_clock::now();
-	mvt(N, nu, covM, a, b, v, e, ns, scaler, workDbl, lworkDbl, workInt, 
+	mvt(N, nu, mu, covM, a, b, v, e, ns, scaler, workDbl, lworkDbl, workInt, 
 		lworkInt);
 	end = std::chrono::steady_clock::now();
 	timeInt = std::chrono::duration<double>(end - start).count();
+	// mem release
+	delete[] workDbl;
+	delete[] workInt;
 	// return a list
 	if(useLog2)
 	{
@@ -513,17 +516,12 @@ Rcpp::List mvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 			Rcpp::Named("Univariate reordering time") = timeChol,
 			Rcpp::Named("Monte Carlo time") = timeInt);
 	}
-
-
-	// mem release
-	delete[] workDbl;
-	delete[] workInt;
 }
 
 // [[Rcpp::export]]
-Rcpp::List mvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu, 
-	Eigen::MatrixXd geom, int kernelType, Eigen::VectorXd para, double nugget, 
-	bool useLog2, int N)
+Rcpp::List mvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, Eigen::VectorXd mu,
+	double nu, Eigen::MatrixXd geom, int kernelType, 
+	Eigen::VectorXd para, double nugget, bool useLog2, int N)
 {
 	// tmp var
 	int n = geom.rows();
@@ -547,12 +545,17 @@ Rcpp::List mvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 	MatrixXd covM = dense_covM(geom, kernel);
 	nugget = nugget / para[0] / para[0];
 	if(nugget != 0.0) for(int i = 0; i < n; i++) covM(i,i) += nugget;
-	if(para[0] != 1.0) {a.noalias() = a / para[0]; b.noalias() = b / para[0];}
+	if(para[0] != 1.0) 
+	{
+		a.noalias() = a / para[0]; 
+		b.noalias() = b / para[0];
+		mu.noalias() = mu / para[0];
+	}
 	end = std::chrono::steady_clock::now();
 	timeCovM = std::chrono::duration<double>(end - start).count();
 	// mem alloc
-	int lworkDbl = 9*n*N + n + ns + 17*N;;
-	int lworkInt = 4*N + n + ns + 1;;
+	int lworkDbl = 9*n*N + n + ns + 17*N;
+	int lworkInt = max(4*N + n + ns + 1, 2*n);
 	double *workDbl = new double[lworkDbl];
 	int *workInt = new int[lworkInt];
 	// uni reorder
@@ -567,6 +570,10 @@ Rcpp::List mvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 	int lsubworkInt = n;
 	copy(a.data(), a.data()+n, acp);
 	copy(b.data(), b.data()+n, bcp);
+	transform(acp, acp+n, mu.data(), acp, [](double a, double mu){
+		return a - mu;});
+	transform(bcp, bcp+n, mu.data(), bcp, [](double b, double mu){
+		return b - mu;});
 	iota(idx, idx+n, 0);
 	fail = uni_reorder(n, covM.data(), covM.rows(), acp, bcp, v, y, idx, 
 		subworkDbl, lsubworkDbl);
@@ -575,14 +582,18 @@ Rcpp::List mvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 			"of the input covariance matrix\n");
 	reorder(a.data(), idx, n, subworkInt, lsubworkInt);
 	reorder(b.data(), idx, n, subworkInt, lsubworkInt);
+	reorder(mu.data(), idx, n, subworkInt, lsubworkInt);
 	end = std::chrono::steady_clock::now();
 	timeChol = std::chrono::duration<double>(end - start).count();
 	// call the mvt function
 	start = std::chrono::steady_clock::now();
-	mvt(N, nu, covM, a, b, v, e, ns, scaler, workDbl, lworkDbl, workInt, 
+	mvt(N, nu, mu, covM, a, b, v, e, ns, scaler, workDbl, lworkDbl, workInt, 
 		lworkInt);
 	end = std::chrono::steady_clock::now();
 	timeInt = std::chrono::duration<double>(end - start).count();
+	// mem release
+	delete[] workDbl;
+	delete[] workInt;
 	// return a list
 	if(useLog2)
 	{
@@ -601,15 +612,11 @@ Rcpp::List mvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 			Rcpp::Named("Univariate reordering time") = timeChol,
 			Rcpp::Named("Monte Carlo time") = timeInt);
 	}
-
-
-	// mem release
-	delete[] workDbl;
-	delete[] workInt;
 }
 
 // [[Rcpp::export]]
 Rcpp::List tlrmvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu, 
+	Eigen::VectorXd mu,
 	Eigen::MatrixXd covM, bool useLog2, int m, double epsl, int N)
 {
 	// tmp var
@@ -628,10 +635,11 @@ Rcpp::List tlrmvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 		auto diagM = diagVec.asDiagonal();
 		a.noalias() = diagM * a;
 		b.noalias() = diagM * b;
+		mu.noalias() = diagM * mu;
 		covM.noalias() = diagM * covM;
 		covM.noalias() = covM * diagM;
 	}
-	// build tlr covM, extend a and b if necessary, resize covM after
+	// build tlr covM, extend a, b, and mu if necessary, resize covM after
 	start = std::chrono::steady_clock::now();
 	vector<MatrixXd> B;
 	vector<TLRNode> UV;
@@ -643,12 +651,16 @@ Rcpp::List tlrmvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 	{
 		VectorXd aCp = a;
 		VectorXd bCp = b;
+		VectorXd muCp = mu;
 		a.resize(n + m - lastBlkDim);
 		b.resize(n + m - lastBlkDim);
+		mu.resize(n + m - lastBlkDim);
 		a.segment(0, n) = aCp;
 		b.segment(0, n) = bCp;
+		mu.segment(0, n) = muCp;
 		a.segment(n, m - lastBlkDim).setConstant(-20.0);
 		b.segment(n, m - lastBlkDim).setConstant(20.0);
+		mu.segment(n, m - lastBlkDim).setConstant(0.0);
 	}
 	covM.resize(0,0);
 	end = std::chrono::steady_clock::now();
@@ -656,7 +668,7 @@ Rcpp::List tlrmvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 	// mem alloc
 	if(lastBlkDim > 0) n += m - lastBlkDim;
 	int lworkDbl = max(19*m*m+16*m+4*n, (5*n + 4*m + 19)*N + ns + m);
-	int lworkInt = 4*N + 2*n + 2*m + ns + 1;;
+	int lworkInt = 4*N + 2*n + 2*m + ns + 1;
 	double *workDbl = new double[lworkDbl];
 	int *workInt = new int[lworkInt];
 	// recur blk reorder
@@ -676,6 +688,10 @@ Rcpp::List tlrmvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 		Rcpp::stop("Memory overflow\n");
 	copy(a.data(), a.data()+n, acp);
 	copy(b.data(), b.data()+n, bcp);
+	transform(acp, acp+n, mu.data(), acp, [](double a, double mu){
+                return a - mu;});
+        transform(bcp, bcp+n, mu.data(), bcp, [](double b, double mu){
+                return b - mu;});
 	iota(idx, idx+n, 0);
 	fail = recur_blk_reorder(B, UV, acp, bcp, p, y, idx, epsl, subworkDbl, 
 		lsubworkDbl, subworkInt, lsubworkInt);
@@ -685,18 +701,22 @@ Rcpp::List tlrmvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 			"factorization is significant\n");
 	reorder(a.data(), idx, n, subworkInt, lsubworkInt);
 	reorder(b.data(), idx, n, subworkInt, lsubworkInt);
+	reorder(mu.data(), idx, n, subworkInt, lsubworkInt);
 	end = std::chrono::steady_clock::now();
 	timeChol = std::chrono::duration<double>(end - start).count();
 	// call the tlrmvt function
 	start = std::chrono::steady_clock::now();
-	tlrmvt(N, nu, B, UV, a, b, v, e, ns, scaler, workDbl, lworkDbl, workInt, 
-		lworkInt);
+	tlrmvt(N, nu, mu, B, UV, a, b, v, e, ns, scaler, workDbl, lworkDbl, 
+		workInt, lworkInt);
 	end = std::chrono::steady_clock::now();
 	timeInt = std::chrono::duration<double>(end - start).count();
 	// compute average rank
 	int rkSum = 0;
 	for(auto &tile : UV) rkSum += tile.crtColNum;
 	int rkAvg = rkSum / UV.size();
+	// mem release
+	delete[] workDbl;
+	delete[] workInt;
 	// return a list
 	if(useLog2)
 	{
@@ -717,15 +737,11 @@ Rcpp::List tlrmvt_internal(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 			Rcpp::Named("Monte Carlo time") = timeInt,
 			Rcpp::Named("Average rank") = rkAvg);
 	}
-
-
-	// mem release
-	delete[] workDbl;
-	delete[] workInt;
 }
 
 // [[Rcpp::export]]
 Rcpp::List tlrmvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu, 
+	Eigen::VectorXd mu,
 	Eigen::MatrixXd geom, int kernelType, Eigen::VectorXd para, double nugget, 
 	bool useLog2, int m, double epsl, int N)
 {
@@ -761,21 +777,30 @@ Rcpp::List tlrmvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 	tlr_aca_covM(geom, B, UV, kernel, m, idx, epslACA, allocSz);
 	nugget = nugget / para[0] / para[0];
 	if(nugget != 0.0) for(int i = 0; i < n; ++i) B[i/m](i%m, i%m) += nugget;
-	if(para[0] != 1.0) {a.noalias() = a / para[0]; b.noalias() = b / para[0];}
+	if(para[0] != 1.0) 
+	{
+                a.noalias() = a / para[0];
+                b.noalias() = b / para[0];
+                mu.noalias() = mu / para[0];
+        }
 	int lastBlkDim = n % m;
 	if(lastBlkDim > 0)
 	{
 		VectorXd aCp = a;
 		VectorXd bCp = b;
+		VectorXd muCp = mu;
 		vector<int> idxCp = idx;
 		a.resize(n + m - lastBlkDim);
 		b.resize(n + m - lastBlkDim);
+		mu.resize(n + m - lastBlkDim);
 		idx.resize(n + m - lastBlkDim);
 		a.segment(0, n) = aCp;
 		b.segment(0, n) = bCp;
+		mu.segment(0, n) = muCp;
 		copy(idxCp.begin(), idxCp.end(), idx.begin());
 		a.segment(n, m - lastBlkDim).setConstant(-20.0);
 		b.segment(n, m - lastBlkDim).setConstant(20.0);
+		mu.segment(n, m - lastBlkDim).setConstant(0.0);
 		iota(idx.begin()+n, idx.end(), n);
 	}
 	end = std::chrono::steady_clock::now();
@@ -783,7 +808,7 @@ Rcpp::List tlrmvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 	// mem alloc
 	if(lastBlkDim > 0) n += m - lastBlkDim;
 	int lworkDbl = max(19*m*m+16*m+4*n, (5*n + 4*m + 19)*N + ns + m);
-	int lworkInt = 4*N + 2*n + 2*m + ns + 1;;
+	int lworkInt = 4*N + 2*n + 2*m + ns + 1;
 	double *workDbl = new double[lworkDbl];
 	int *workInt = new int[lworkInt];
 	// recur blk reorder
@@ -798,8 +823,8 @@ Rcpp::List tlrmvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 		Rcpp::stop("Memory overflow\n");
 	for(int i = 0; i < n; i++)
 	{
-		acp[i] = a[idx[i]];
-		bcp[i] = b[idx[i]];
+		acp[i] = a[idx[i]] - mu[idx[i]];
+		bcp[i] = b[idx[i]] - mu[idx[i]];
 	}
 	fail = recur_blk_reorder(B, UV, acp, bcp, p, y, &(idx[0]), epsl, subworkDbl, 
 		lsubworkDbl, workInt, lworkInt);
@@ -809,18 +834,22 @@ Rcpp::List tlrmvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 			"factorization is significant\n");
 	reorder(a.data(), &(idx[0]), n, workInt, lworkInt);
 	reorder(b.data(), &(idx[0]), n, workInt, lworkInt);
+	reorder(mu.data(), &(idx[0]), n, workInt, lworkInt);
 	end = std::chrono::steady_clock::now();
 	timeChol = std::chrono::duration<double>(end - start).count();
 	// call the tlrmvt function
 	start = std::chrono::steady_clock::now();
-	tlrmvt(N, nu, B, UV, a, b, v, e, ns, scaler, workDbl, lworkDbl, workInt, 
-		lworkInt);
+	tlrmvt(N, nu, mu, B, UV, a, b, v, e, ns, scaler, workDbl, lworkDbl, 
+		workInt, lworkInt);
 	end = std::chrono::steady_clock::now();
 	timeInt = std::chrono::duration<double>(end - start).count();
 	// compute average rank
 	int rkSum = 0;
 	for(auto &tile : UV) rkSum += tile.crtColNum;
 	int rkAvg = rkSum / UV.size();
+	// mem release
+	delete[] workDbl;
+	delete[] workInt;
 	// return a list
 	if(useLog2)
 	{
@@ -841,9 +870,4 @@ Rcpp::List tlrmvt_internal2(Eigen::VectorXd a, Eigen::VectorXd b, double nu,
 			Rcpp::Named("Monte Carlo time") = timeInt,
 			Rcpp::Named("Average rank") = rkAvg);
 	}
-
-
-	// mem release
-	delete[] workDbl;
-	delete[] workInt;
 }

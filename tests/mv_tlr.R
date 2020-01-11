@@ -1,5 +1,6 @@
 library(tlrmvnmvt)
 library(mvtnorm)
+set.seed(123)
 n = 260
 a = rep(-10, n)
 b = rnorm(n, 5, 2)

@@ -77,10 +77,10 @@ pmvt.tlr <- function(lower=-Inf, upper=Inf, nu=NULL, mean=0, sigma=NULL,
     stop("`m` cannot be NA")
   if(length(m) != 1)
     stop("`m` should be of length 1")
-  if(m < 16)
-    stop("Block size `m` should be at least 16")
-  if(m > n)
-    m = n
+  if(m < 4)
+    stop("Block size `m` should be at least 4")
+  if(m >= n)
+    stop("Block size `m` should be smaller than the problem dimension")
   # check N
   if(!is.numeric(N))
     stop("`N` should be numeric")
@@ -110,16 +110,13 @@ pmvt.tlr <- function(lower=-Inf, upper=Inf, nu=NULL, mean=0, sigma=NULL,
     stop("`epsl` should be of length 1")
   if(epsl <= 0)
     stop("`epsl` should be greater than 0")
-  # pass to the internal function
-  lower <- lower - mean
-  upper <- upper - mean
   if(any(lower > upper))
     stop("At least one `upper` coefficient is smaller than `lower`")
   if(mtd == 1)
   {
-    tlrmvt_internal(lower, upper, nu, sigma, uselog2, m, epsl, N)
+    tlrmvt_internal(lower, upper, nu, mean, sigma, uselog2, m, epsl, N)
   }else
   {
-    tlrmvt_internal2(lower, upper, nu, geom, kernelType, para[1:3], para[4], uselog2, m, epsl, N)
+    tlrmvt_internal2(lower, upper, nu, mean, geom, kernelType, para[1:3], para[4], uselog2, m, epsl, N)
   }
   }

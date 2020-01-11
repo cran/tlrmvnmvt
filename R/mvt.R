@@ -92,15 +92,15 @@ pmvt.genz <- function(lower=-Inf, upper=Inf, nu=NULL, mean=0, sigma=NULL,
   # convert uselog2 to logical
   uselog2 = as.logical(uselog2)
   # pass to the internal function
-  lower <- lower - mean
-  upper <- upper - mean
+  lower <- lower 
+  upper <- upper 
   if(any(lower > upper))
     stop("At least one `upper` coefficient is smaller than `lower`")
   if(mtd == 1)
   {
-    mvt_internal(lower, upper, nu, sigma, uselog2, N)
+    mvt_internal(lower, upper, mean, nu, sigma, uselog2, N)
   }else
   {
-    mvt_internal2(lower, upper, nu, geom, kernelType, para[1:3], para[4], uselog2, N)
+    mvt_internal2(lower, upper, mean, nu, geom, kernelType, para[1:3], para[4], uselog2, N)
   }
 }

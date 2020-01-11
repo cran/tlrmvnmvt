@@ -1,8 +1,8 @@
 Package: tlrmvnmvt
 Type: Package
 Title: Low-Rank Methods for MVN and MVT Probabilities
-Version: 1.0.0
-Date: 2019-10-10
+Version: 1.0.1
+Date: 2019-12-20
 Author: Jian Cao, Marc Genton, David Keyes, George Turkiyyah
 Maintainer: Jian Cao <jian.cao@kaust.edu.sa>
 Description: Implementation of the classic Genz algorithm and a novel tile-low-rank algorithm for computing 		relatively high-dimensional multivariate normal (MVN) and Student-t (MVT) probabilities. 
@@ -22,6 +22,6 @@ Suggests: mvtnorm (>= 1.0.11)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp (>= 1.0.1), RcppEigen (>= 0.3.3.5.0), BH (>= 1.69.0.1)
 NeedsCompilation: yes
-Packaged: 2019-10-31 12:27:19 UTC; caoj
+Packaged: 2020-01-11 13:09:26 UTC; caoj
 Repository: CRAN
-Date/Publication: 2019-11-04 16:50:02 UTC
+Date/Publication: 2020-01-11 13:40:02 UTC

@@ -15,7 +15,6 @@ std::function<double(double)> exp_kernel(double beta)
 std::function<double(double)> matern_kernel(double rho, double nu)
 {
 	double c1 = pow(2.0, 1.0 - nu) / tgamma(nu);
-	double c2 = sqrt(2*nu) / rho;
-	return [c1, c2, rho, nu](double dist){return dist > 0.0 ? c1 * 
-		pow(c2*dist, nu) * boost::math::cyl_bessel_k(nu, c2*dist) : 1.0;};
+	return [c1, rho, nu](double dist){return dist > 0.0 ? c1 * 
+		pow(dist/rho, nu) * boost::math::cyl_bessel_k(nu, dist/rho) : 1.0;};
 }

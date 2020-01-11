@@ -18,7 +18,8 @@ using namespace Eigen;
 	lworkInt should be no smaller than 4N + n + ns + 1
 	2019/09/26
 */
-int tlrmvt(int N, double nu, const std::vector<Eigen::MatrixXd> &B, 
+int tlrmvt(int N, double nu, const VectorXd &mu, 
+	const std::vector<Eigen::MatrixXd> &B, 
 	const std::vector<TLRNode> &UV, const Eigen::VectorXd &a1, 
 	const Eigen::VectorXd &b1, double &v, double &e, int ns, int &scaler_in, 
 	double *workDbl, int lworkDbl, int *workInt, int lworkInt)
@@ -90,6 +91,8 @@ int tlrmvt(int N, double nu, const std::vector<Eigen::MatrixXd> &B,
 			s, &N_tilde, &beta, a, &n);
 		F77_CALL(dgemm)("N", "T", &n, &N_tilde, &K, &alpha, b1.data(), &n,
 			s, &N_tilde, &beta, b, &n);
+		aMap.colwise() -= mu;
+		bMap.colwise() -= mu;
                 int offset_UV = 0;
                 for (int r = 0; r < nb; r++) {
                         int r1 = r*m;

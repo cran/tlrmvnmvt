@@ -17,20 +17,20 @@ tlrmvn_internal2 <- function(a, b, geom, kernelType, para, nugget, useLog2, m, e
     .Call('_tlrmvnmvt_tlrmvn_internal2', PACKAGE = 'tlrmvnmvt', a, b, geom, kernelType, para, nugget, useLog2, m, epsl, N)
 }
 
-mvt_internal <- function(a, b, nu, covM, useLog2, N) {
-    .Call('_tlrmvnmvt_mvt_internal', PACKAGE = 'tlrmvnmvt', a, b, nu, covM, useLog2, N)
+mvt_internal <- function(a, b, mu, nu, covM, useLog2, N) {
+    .Call('_tlrmvnmvt_mvt_internal', PACKAGE = 'tlrmvnmvt', a, b, mu, nu, covM, useLog2, N)
 }
 
-mvt_internal2 <- function(a, b, nu, geom, kernelType, para, nugget, useLog2, N) {
-    .Call('_tlrmvnmvt_mvt_internal2', PACKAGE = 'tlrmvnmvt', a, b, nu, geom, kernelType, para, nugget, useLog2, N)
+mvt_internal2 <- function(a, b, mu, nu, geom, kernelType, para, nugget, useLog2, N) {
+    .Call('_tlrmvnmvt_mvt_internal2', PACKAGE = 'tlrmvnmvt', a, b, mu, nu, geom, kernelType, para, nugget, useLog2, N)
 }
 
-tlrmvt_internal <- function(a, b, nu, covM, useLog2, m, epsl, N) {
-    .Call('_tlrmvnmvt_tlrmvt_internal', PACKAGE = 'tlrmvnmvt', a, b, nu, covM, useLog2, m, epsl, N)
+tlrmvt_internal <- function(a, b, nu, mu, covM, useLog2, m, epsl, N) {
+    .Call('_tlrmvnmvt_tlrmvt_internal', PACKAGE = 'tlrmvnmvt', a, b, nu, mu, covM, useLog2, m, epsl, N)
 }
 
-tlrmvt_internal2 <- function(a, b, nu, geom, kernelType, para, nugget, useLog2, m, epsl, N) {
-    .Call('_tlrmvnmvt_tlrmvt_internal2', PACKAGE = 'tlrmvnmvt', a, b, nu, geom, kernelType, para, nugget, useLog2, m, epsl, N)
+tlrmvt_internal2 <- function(a, b, nu, mu, geom, kernelType, para, nugget, useLog2, m, epsl, N) {
+    .Call('_tlrmvnmvt_tlrmvt_internal2', PACKAGE = 'tlrmvnmvt', a, b, nu, mu, geom, kernelType, para, nugget, useLog2, m, epsl, N)
 }
 
 zorder <- function(geom) {

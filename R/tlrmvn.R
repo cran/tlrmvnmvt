@@ -77,10 +77,10 @@ pmvn.tlr <- function(lower=-Inf, upper=Inf, mean=0, sigma=NULL,
     stop("`m` cannot be NA")
   if(length(m) != 1)
     stop("`m` should be of length 1")
-  if(m < 16)
-    stop("Block size `m` should be at least 16")
-  if(m > n)
-    m = n
+  if(m < 4)
+    stop("Block size `m` should be at least 4")
+  if(m >= n)
+    stop("Block size `m` should be smaller than the problem dimension")
   # check N
   if(!is.numeric(N))
     stop("`N` should be numeric")
