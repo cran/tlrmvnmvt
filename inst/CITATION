@@ -1,0 +1,23 @@
+bibentry(bibtype = "Article",
+  title        = "{tlrmvnmvt}: Computing High-Dimensional Multivariate Normal and {S}tudent-$t$ Probabilities with Low-Rank Methods in {R}",
+  author       = c(person(given = "Jian",
+                          family = "Cao",
+                          email = "jian.cao@kaust.edu.sa"),
+                   person(given = c("Marc", "G."),
+                          family = "Genton",
+                          email = "marc.genton@kaust.edu.sa"),
+                   person(given = c("David", "E."),
+                          family = "Keyes",
+                          email = "david.keyes@kaust.edu.sa"),
+                   person(given = c("George", "M."),
+                          family = "Turkiyyah",
+                          email = "gt02@aub.edu.lb")),
+  journal      = "Journal of Statistical Software",
+  year         = "2022",
+  volume       = "101",
+  number       = "4",
+  pages        = "1--25",
+  doi          = "10.18637/jss.v101.i04",
+  header       = "To cite tlrmvnmvt in publications use:"
+)
+

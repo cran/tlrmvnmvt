@@ -18,9 +18,9 @@ uselog2 = FALSE, algorithm = GenzBretz(), ...)
     \code{\link{TLRQMC}} defining the hyper parameters of this algorithm}
   \item{...}{additional parameters used to construct `sigma` when it is not given:
     \itemize{
-      \item{geom}{a matrix of dimension n-by-2, specifying n spatial locations in the 2D unit square}
-      \item{type}{the name of the covariance kernel, a string. Currently, only the Matern covariance function, e.g., "matern", is supported. Not case-sensitive. It should be given when `sigma` is not given}
-      \item{para}{the parameter for the covariance kernel, a numeric vector. When `type` is "matern", the length of `para` should be 4, representing the scale, range, smoothness, and nugget parameters of the covariance function. It should be given when `sigma` is not given}
+      \item{geom}{ a matrix of dimension n-by-2, specifying n spatial locations in the 2D unit square}
+      \item{kernelType}{ the name of the covariance kernel, a string. Currently, only the Matern covariance function, e.g., "matern", is supported. Not case-sensitive. It should be given when `sigma` is not given}
+      \item{para}{ the parameter for the covariance kernel, a numeric vector. When `type` is "matern", the length of `para` should be 4, representing the scale, range, smoothness, and nugget parameters of the covariance function. It should be given when `sigma` is not given}
     }
   }
 }
@@ -31,15 +31,13 @@ uselog2 = FALSE, algorithm = GenzBretz(), ...)
 \details{
   When `algorithm` is of the class `GenzBretz`, the Quasi-Monte Carlo sampling described in Genz, A. (1992) is used.
   When `algorithm` is of the class `TLRQMC`, the Quasi-Monte Carlo sampling with the tile-low-rank representation of the covariance matrix, described in Cao et al. (2020), is used.
-  When `sigma`, is given, `geom`, `type`, and `para` are not used. Otherwise, a covariance matrix is created with the information from `geom`, `type`, and `para`.
+  When `sigma`, is given, `geom`, `kernelType`, and `para` are not used. Otherwise, a covariance matrix is created with the information from `geom`, `kernelType`, and `para`.
 }
 \references{
   Genz, A. (1992), "Numerical computation of multivariate
 normal probabilities," Journal of Computational and
 Graphical Statistics, 1, 141-149.
-  Cao, J., Genton, M. G., Keyes, D. E., & Turkiyyah, G. M. (2019). "Exploiting Low
-Rank Covariance Structures for Computing High-Dimensional Normal and Student-
-t Probabilities"
+  Cao, J., Genton, M. G., Keyes, D. E., & Turkiyyah, G. M. (2022), "tlrmvnmvt: Computing High-Dimensional Multivariate Normal and Student-t Probabilities with Low-Rank Methods in R," Journal of Statistical Software, 101.4, 1-25.
 }
 \examples{
   n = 225

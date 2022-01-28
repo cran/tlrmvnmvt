@@ -18,7 +18,5 @@
 Maintainer: \packageMaintainer{tlrmvnmvt}
 }
 \references{
-Cao, J., Genton, M. G., Keyes, D. E., & Turkiyyah, G. M. (2019). "Exploiting Low
-Rank Covariance Structures for Computing High-Dimensional Normal and Student-
-t Probabilities"
+    Cao, J., Genton, M. G., Keyes, D. E., & Turkiyyah, G. M. (2022), "tlrmvnmvt: Computing High-Dimensional Multivariate Normal and Student-t Probabilities with Low-Rank Methods in R," Journal of Statistical Software, 101.4, 1-25.
 }
