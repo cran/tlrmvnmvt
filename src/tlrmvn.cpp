@@ -1,6 +1,14 @@
+#ifndef  USE_FC_LEN_T
+# define USE_FC_LEN_T
+#endif
+#include <Rconfig.h>
+#include <R_ext/BLAS.h>
+#include <R_ext/Lapack.h>
+#ifndef FCONE
+# define FCONE
+#endif
 #include <RcppEigen.h>
 #include <R_ext/Print.h>
-#include <R_ext/Lapack.h>
 #include <R.h>
 #include <algorithm>
 #include <ctime>
@@ -91,12 +99,12 @@ int tlrmvn(int N, const std::vector<Eigen::MatrixXd> &B,
                                         beta = 0.0;
                                         F77_CALL(dgemm)("T", "N", &crtColNumUV,
                                                 &N_tilde, &m, &alpha, UV[offset_UV +
-                                                j].V.data(), &m, y, &m, &beta, a, &n);
+                                                j].V.data(), &m, y, &m, &beta, a, &n FCONE FCONE);
                                                 // use a[1:m, 1:N_tilde] to store VT *
                                                 // y
                                         F77_CALL(dgemm)("N", "N", &m, &N_tilde,
                                                 &crtColNumUV, &alpha, UV[offset_UV +
-                                                j].U.data(), &m, a, &n, &beta, b, &n);
+                                                j].U.data(), &m, a, &n, &beta, b, &n FCONE FCONE);
                                                 // use b[1:m, 1:N_tilde] to store U *
                                                 // a[1:crtColNumUV, 1:N_tilde]
                                         for(int k = 0; k < N_tilde; k++)

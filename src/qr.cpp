@@ -1,5 +1,13 @@
-#include <RcppEigen.h>
+#ifndef  USE_FC_LEN_T
+# define USE_FC_LEN_T
+#endif
+#include <Rconfig.h>
+#include <R_ext/BLAS.h>
 #include <R_ext/Lapack.h>
+#ifndef FCONE
+# define FCONE
+#endif
+#include <RcppEigen.h>
 #include <R_ext/Print.h>
 #include "qr.h"
 

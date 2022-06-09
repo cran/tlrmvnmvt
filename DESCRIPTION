@@ -1,10 +1,13 @@
 Package: tlrmvnmvt
 Type: Package
 Title: Low-Rank Methods for MVN and MVT Probabilities
-Version: 1.1.1
-Date: 2022-01-28
-Author: Jian Cao, Marc Genton, David Keyes, George Turkiyyah
-Maintainer: Jian Cao <jian.cao@kaust.edu.sa>
+Version: 1.1.2
+Date: 2022-06-07
+Authors@R: c(person("Marc", "Genton", role = "aut"),
+             person("David", "Keyes", role = "aut"),
+             person("George", "Turkiyyah", role = "aut"),
+             person("Jian", "Cao", role = c("aut", "cre"),
+                    email = "jian.cao@kaust.edu.sa"))
 Description: Implementation of the classic Genz algorithm and a novel tile-low-rank algorithm for computing	relatively high-dimensional multivariate normal (MVN) and Student-t (MVT) probabilities. 
 	References used for this package:
 	Foley, James, Andries van Dam, Steven Feiner, and John Hughes. 
@@ -22,11 +25,16 @@ Description: Implementation of the classic Genz algorithm and a novel tile-low-r
     with Low-Rank Methods in R," Journal of Statistical Software, 101.4, 
     1-25 (2022) <doi:10.18637/jss.v101.i04>.
 License: GPL-2
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.2.0)
 Suggests: mvtnorm (>= 1.0.11)
-Imports: Rcpp (>= 1.0.1)
-LinkingTo: Rcpp (>= 1.0.1), RcppEigen (>= 0.3.3.5.0), BH (>= 1.69.0.1)
+Imports: Rcpp (>= 1.0.8), methods (>= 4.2.0)
+LinkingTo: Rcpp (>= 1.0.8), RcppEigen (>= 0.3.3.5.0), BH (>= 1.69.0.1)
 NeedsCompilation: yes
-Packaged: 2022-01-28 15:04:12 UTC; caoj
+Packaged: 2022-06-08 02:11:41 UTC; caoj
+Author: Marc Genton [aut],
+  David Keyes [aut],
+  George Turkiyyah [aut],
+  Jian Cao [aut, cre]
+Maintainer: Jian Cao <jian.cao@kaust.edu.sa>
 Repository: CRAN
-Date/Publication: 2022-01-28 23:30:02 UTC
+Date/Publication: 2022-06-09 09:40:02 UTC

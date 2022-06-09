@@ -1,6 +1,13 @@
-#include <RcppEigen.h>
-#include <R_ext/Lapack.h>
+#ifndef  USE_FC_LEN_T
+# define USE_FC_LEN_T
+#endif
+#include <Rconfig.h>
 #include <R_ext/BLAS.h>
+#include <R_ext/Lapack.h>
+#ifndef FCONE
+# define FCONE
+#endif
+#include <RcppEigen.h>
 #include <R_ext/Print.h>
 #include "cholesky.h"
 #include "qr.h"
@@ -63,10 +70,10 @@ void tlr_tlr_add_qr(TLRNode &chgNode, const double *U, const double *V, int k2, 
 			// VCmb = VCmb RU^T
 			double alpha = 1.0;
 			F77_CALL(dtrmm)("R", "U", "T", "N", &ncol, &kCmb, &alpha, RU, 
-				&kCmb, VCmb, &ncol); 
+				&kCmb, VCmb, &ncol FCONE FCONE FCONE FCONE); 
 			// svd(Vcmb)
 			F77_CALL(dgesvd)("S", "S", &ncol, &kCmb, VCmb, &ncol, tau,
-				RU, &kCmb, RV, &kCmb, subwork, &lsubwork, &fail);
+				RU, &kCmb, RV, &kCmb, subwork, &lsubwork, &fail FCONE FCONE);
 				// RU stores the U factor
 				// RV stores the VT factor
 				// lsubwork >= 5 * kCmb
@@ -91,7 +98,7 @@ void tlr_tlr_add_qr(TLRNode &chgNode, const double *U, const double *V, int k2, 
 			alpha = 1.0;
 			double beta = 0.0;
 			F77_CALL(dgemm)("N", "T", &nrow, &kNew, &kCmb, &alpha, UCmb, 
-				&nrow, RV, &kCmb, &beta, chgNode.U.data(), &nrow);
+				&nrow, RV, &kCmb, &beta, chgNode.U.data(), &nrow FCONE FCONE);
 			for(int j = 0; j < kNew; j++)
 				copy_n(RU+j*kCmb, ncol, chgNode.V.data()+j*ncol);
 			for(int j = 0; j < kNew; ++j)
@@ -122,10 +129,10 @@ void tlr_tlr_add_qr(TLRNode &chgNode, const double *U, const double *V, int k2, 
 			// UCmb = UCmb RV^T
 			double alpha = 1.0;
 			F77_CALL(dtrmm)("R", "U", "T", "N", &nrow, &kCmb, &alpha, RV, 
-				&kCmb, UCmb, &nrow); 
+				&kCmb, UCmb, &nrow FCONE FCONE FCONE FCONE); 
 			// svd(Ucmb)
 			F77_CALL(dgesvd)("S", "S", &nrow, &kCmb, UCmb, &nrow, tau,
-				RU, &kCmb, RV, &kCmb, subwork, &lsubwork, &fail);
+				RU, &kCmb, RV, &kCmb, subwork, &lsubwork, &fail FCONE FCONE);
 				// RU stores the U factor
 				// RV stores the VT factor
 				// lsubwork >= 5 * kCmb
@@ -150,7 +157,7 @@ void tlr_tlr_add_qr(TLRNode &chgNode, const double *U, const double *V, int k2, 
 			alpha = 1.0;
 			double beta = 0.0;
 			F77_CALL(dgemm)("N", "T", &ncol, &kNew, &kCmb, &alpha, VCmb, 
-				&ncol, RV, &kCmb, &beta, chgNode.V.data(), &ncol);
+				&ncol, RV, &kCmb, &beta, chgNode.V.data(), &ncol FCONE FCONE);
 			for(int j = 0; j < kNew; j++)
 				copy_n(RU+j*kCmb, nrow, chgNode.U.data()+j*nrow);
 			for(int j = 0; j < kNew; ++j)
@@ -171,10 +178,10 @@ void tlr_tlr_add_qr(TLRNode &chgNode, const double *U, const double *V, int k2, 
 			double alpha = 1.0;
 			double beta = 0.0;
 			F77_CALL(dgemm)("N", "T", &nrow, &ncol, &kCmb, &alpha, UCmb,
-			&nrow, VCmb, &ncol, &beta, RUV, &kCmb);
+			&nrow, VCmb, &ncol, &beta, RUV, &kCmb FCONE FCONE);
 			// svd(RUV)
 			F77_CALL(dgesvd)("S", "S", &nrow, &ncol, RUV, &kCmb, tau, 
-				RU, &kCmb, RV, &kCmb, subwork, &lsubwork, &fail);
+				RU, &kCmb, RV, &kCmb, subwork, &lsubwork, &fail FCONE FCONE);
 				// RU stores the U factor 
 				// RV stores the VT factor
 				// lsubwork >= 5 * max(nrow, ncol)
@@ -244,11 +251,11 @@ void tlr_tlr_add_qr(TLRNode &chgNode, const double *U, const double *V, int k2, 
 		// RU = RU * RV^T
 		double alpha = 1.0;
 		F77_CALL(dtrmm)("R", "U", "T", "N", &kCmb, &kCmb, &alpha, RV, &kCmb, 
-			RU, &kCmb); // Assume RU is a general matrix 
+			RU, &kCmb FCONE FCONE FCONE FCONE); // Assume RU is a general matrix 
 			// Therefore, the lower tri of RU needs to be set to 0
 		// svd(RU)
 		F77_CALL(dgesvd)("S", "S", &kCmb, &kCmb, RU, &kCmb, tau, 
-			RUV, &kCmb, RV, &kCmb, subwork, &lsubwork, &fail);
+			RUV, &kCmb, RV, &kCmb, subwork, &lsubwork, &fail FCONE FCONE);
 			// RUV stores the U factor 
 			// RV stores the VT factor
 			// lsubwork >= 5 * kCmb
@@ -273,9 +280,9 @@ void tlr_tlr_add_qr(TLRNode &chgNode, const double *U, const double *V, int k2, 
 		alpha = 1.0;
                 double beta = 0.0;
                 F77_CALL(dgemm)("N", "N", &nrow, &kNew, &kCmb, &alpha, UCmb,
-                        &nrow, RUV, &kCmb, &beta, chgNode.U.data(), &nrow);
+                        &nrow, RUV, &kCmb, &beta, chgNode.U.data(), &nrow FCONE FCONE);
                 F77_CALL(dgemm)("N", "T", &ncol, &kNew, &kCmb, &alpha, VCmb,
-                        &ncol, RV, &kCmb, &beta, chgNode.V.data(), &ncol);
+                        &ncol, RV, &kCmb, &beta, chgNode.V.data(), &ncol FCONE FCONE);
                 for(int j = 0; j < kNew; ++j)
                 {
                         double tauCoefSqrt = sqrt(tau[j]);

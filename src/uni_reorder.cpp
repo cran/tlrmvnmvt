@@ -1,5 +1,13 @@
-#include <RcppEigen.h>
+#ifndef  USE_FC_LEN_T
+# define USE_FC_LEN_T
+#endif
+#include <Rconfig.h>
 #include <R_ext/BLAS.h>
+#include <R_ext/Lapack.h>
+#ifndef FCONE
+# define FCONE
+#endif
+#include <RcppEigen.h>
 #include <algorithm>
 #include <cmath>
 #include "mvphi.h"
@@ -64,7 +72,7 @@ int uni_reorder(int n, double *B, int ldB, double *a, double *b, double &p, doub
 			double alpha = -1.0;
 			int step = 1;
 			F77_CALL(dsyr)("L", &nrowLeft, &alpha, B+i+1+i*ldB, &step, 
-				B+i+1+(i+1)*ldB, &ldB);
+				B+i+1+(i+1)*ldB, &ldB FCONE);
 		} // i < n-1
 		// compute y
 		double aScaledCoef = a[i] / *(B+i+i*ldB);

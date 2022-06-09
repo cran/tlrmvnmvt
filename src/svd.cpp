@@ -1,5 +1,13 @@
-#include <RcppEigen.h>
+#ifndef  USE_FC_LEN_T
+# define USE_FC_LEN_T
+#endif
+#include <Rconfig.h>
+#include <R_ext/BLAS.h>
 #include <R_ext/Lapack.h>
+#ifndef FCONE
+# define FCONE
+#endif
+#include <RcppEigen.h>
 #include <R_ext/Print.h>
 #include "svd.h"
 
@@ -42,6 +50,6 @@ int svd(Eigen::MatrixXd &A , int ARowNum , int AColNum , Eigen::MatrixXd &U ,
         int fail;
         F77_CALL(dgesvd)("S" , "S" , &ARowNum , &AColNum , A.data() , &ldA ,
                 S.data() , U.data() , &ldU , VT.data() , &ldVT , work , &lwork ,
-                &fail);
+                &fail FCONE FCONE);
         return fail;
 }

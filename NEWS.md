@@ -22,6 +22,11 @@ This version makes changes to the R interfaces of the package
 		2. Users can specify whether the results should be returned in terms of logarithm
 		3. The sample size, block size (for tile-low-rank only), and the truncation level can be specified through the `algorithm` parameter
 		4. Covariance matrices can be constructed by the package with the optional parameters but these parameters are not specified to align the function interfaces with those from the `mvtnorm` package
+		
 # tlrmvnmvt 1.1.1
 
 This version revised the argument check. Previously, setting the lower bound as a single value (not a vector) would cause error for the tile-low-rank functions. Now this problem is fixed.
+
+# tlrmvnmvt 1.1.2
+
+This version revised the F77 callings to BLAS and LAPACK functions to satisfy the new requirement since R4.2.0.

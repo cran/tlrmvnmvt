@@ -127,7 +127,7 @@ pmvn <- function(lower = -Inf, upper = Inf, mean = 0, sigma = NULL, uselog2 = FA
     #else if
   }
   checkN(algorithm$N) # check number of samples
-  if(class(algorithm) == "TLRQMC")
+  if(is(algorithm, "TLRQMC"))
   {
     n <- length(lower)
     checkTLR(n, algorithm$m, algorithm$epsl)
@@ -135,7 +135,7 @@ pmvn <- function(lower = -Inf, upper = Inf, mean = 0, sigma = NULL, uselog2 = FA
   # pass to the internal function
   cArgs$lower <- cArgs$lower - cArgs$mean
   cArgs$upper <- cArgs$upper - cArgs$mean
-  if(class(algorithm) == "GenzBretz")
+  if(is(algorithm, "GenzBretz"))
   {
     if(cArgs$buildSigma)
     {
@@ -147,7 +147,7 @@ pmvn <- function(lower = -Inf, upper = Inf, mean = 0, sigma = NULL, uselog2 = FA
       RET <- mvn_internal(cArgs$lower, cArgs$upper, cArgs$sigma, 
                           cArgs$uselog2, algorithm$N)
     }
-  }else if(class(algorithm) == "TLRQMC")
+  }else if(is(algorithm, "TLRQMC"))
   {
     if(cArgs$buildSigma)
     {
@@ -185,7 +185,7 @@ pmvt <- function(lower = -Inf, upper = Inf, delta = 0, df = 1,
     #else if
   }
   checkN(algorithm$N) # check number of samples
-  if(class(algorithm) == "TLRQMC")
+  if(is(algorithm, "TLRQMC"))
   {
     n <- length(lower)
     checkTLR(n, algorithm$m, algorithm$epsl)
@@ -197,7 +197,7 @@ pmvt <- function(lower = -Inf, upper = Inf, delta = 0, df = 1,
     cArgs$upper <- cArgs$upper - cArgs$mean
     cArgs$mean <- rep(0, length(cArgs$lower))
   }
-  if(class(algorithm) == "GenzBretz")
+  if(is(algorithm, "GenzBretz"))
   {
     if(cArgs$buildSigma)
       RET <- mvt_internal2(cArgs$lower, cArgs$upper, cArgs$mean, cArgs$nu, 
@@ -206,7 +206,7 @@ pmvt <- function(lower = -Inf, upper = Inf, delta = 0, df = 1,
     else
       RET <- mvt_internal(cArgs$lower, cArgs$upper, cArgs$mean, cArgs$nu,
                    cArgs$sigma, cArgs$uselog2, algorithm$N)
-  }else if(class(algorithm) == "TLRQMC")
+  }else if(is(algorithm, "TLRQMC"))
   {
     if(cArgs$buildSigma)
       RET <- tlrmvt_internal2(cArgs$lower, cArgs$upper, cArgs$nu, cArgs$mean,

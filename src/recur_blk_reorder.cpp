@@ -1,6 +1,13 @@
-#include <RcppEigen.h>
-#include <R_ext/Lapack.h>
+#ifndef  USE_FC_LEN_T
+# define USE_FC_LEN_T
+#endif
+#include <Rconfig.h>
 #include <R_ext/BLAS.h>
+#include <R_ext/Lapack.h>
+#ifndef FCONE
+# define FCONE
+#endif
+#include <RcppEigen.h>
 #include <algorithm>
 #include "tlr.h"
 #include "cholesky.h"
@@ -131,7 +138,7 @@ int recur_blk_reorder(std::vector<Eigen::MatrixXd> &B, std::vector<TLRNode> &UV,
 		// Cholesky
 		int success_code;
 		copy_n(B[i].data(), m*m, Bi);
-		F77_CALL(dtrtri)("L", "N", &m, Bi, &m, &success_code); // upper tri is
+		F77_CALL(dtrtri)("L", "N", &m, Bi, &m, &success_code FCONE FCONE); // upper tri is
 			// not referenced
 		if(success_code)
 			Rcpp::stop("Matrix inverse failed in recursive block "
@@ -142,7 +149,7 @@ int recur_blk_reorder(std::vector<Eigen::MatrixXd> &B, std::vector<TLRNode> &UV,
 			// trailing blk in the same col
 			double alpha = 1.0;
 			F77_CALL(dtrmm)("L", "L", "N", "N", &m, &UV[idx1].crtColNum, 
-				&alpha, Bi, &m, UV[idx1].V.data(), &m);
+				&alpha, Bi, &m, UV[idx1].V.data(), &m FCONE FCONE FCONE FCONE);
 			// diag blk in Schur complement
 			if(UV[idx1].crtColNum > m)
 				Rcpp::stop("UV[%d]'s column number is greater than "
@@ -151,16 +158,16 @@ int recur_blk_reorder(std::vector<Eigen::MatrixXd> &B, std::vector<TLRNode> &UV,
 			double beta = 0.0;
 			// Bj = V[idx1]^T V[idx1]
 			F77_CALL(dsyrk)("L", "T", &UV[idx1].crtColNum, &m, &alpha, 
-				UV[idx1].V.data(), &m, &beta, Bj, &m);
+				UV[idx1].V.data(), &m, &beta, Bj, &m FCONE FCONE);
 			// BSchur = U[idx1] Bj
 			F77_CALL(dsymm)("R", "L", &m, &UV[idx1].crtColNum, &alpha, Bj,
-				&m, UV[idx1].U.data(), &m, &beta, BSchur, &m);
+				&m, UV[idx1].U.data(), &m, &beta, BSchur, &m FCONE FCONE);
 			// B[ii] = B[ii] - BSchur * U[idx1].trans
 			alpha = -1.0;
 			beta = 1.0;
 			F77_CALL(dgemm)("N", "T", &m, &m, &UV[idx1].crtColNum, &alpha,
 				BSchur, &m, UV[idx1].U.data(), &m, &beta, B[ii].
-				data(), &m);
+				data(), &m FCONE FCONE);
 			// integration limits
 //			alpha = 1.0;
 //			beta = 0.0;
@@ -226,12 +233,12 @@ int recur_blk_reorder(std::vector<Eigen::MatrixXd> &B, std::vector<TLRNode> &UV,
 			// Utmp = V[idx1]^T V[idx2]
 			F77_CALL(dgemm)("T", "N", &UV[idx1].crtColNum, &UV[idx2].
 				crtColNum, &m, &alpha, UV[idx1].V.data(), &m, 
-				UV[idx2].V.data(), &m, &beta, Utmp, &m);
+				UV[idx2].V.data(), &m, &beta, Utmp, &m FCONE FCONE);
 			alpha = -1.0;
 			// Ucmb = - U[idx1] Utmp
 			F77_CALL(dgemm)("N", "N", &m, &UV[idx2].crtColNum, &UV[idx1].
 				crtColNum, &alpha, UV[idx1].U.data(), &m, Utmp, &m,
-				&beta, Ucmb, &m);
+				&beta, Ucmb, &m FCONE FCONE);
 
 			tlr_tlr_add_qr(UV[idx], Ucmb, UV[idx2].U.data(), UV[idx2].
 				crtColNum, epsl, subworkDbl, lsubworkDbl);
