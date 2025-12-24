@@ -1928,9 +1928,9 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
 
-CXX=`$R_HOME/bin/R CMD config CXX14`
+CXX=`$R_HOME/bin/R CMD config CXX`
 if test "$CXX" = "" ; then
-	as_fn_error $? "\"CXX14 compiler not found\"" "$LINENO" 5
+	as_fn_error $? "\"CXX compiler not found\"" "$LINENO" 5
 fi
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'

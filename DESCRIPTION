@@ -1,7 +1,7 @@
 Package: tlrmvnmvt
 Type: Package
 Title: Low-Rank Methods for MVN and MVT Probabilities
-Version: 1.1.2
+Version: 1.1.2.1
 Date: 2022-06-07
 Authors@R: c(person("Marc", "Genton", role = "aut"),
              person("David", "Keyes", role = "aut"),
@@ -30,11 +30,11 @@ Suggests: mvtnorm (>= 1.0.11)
 Imports: Rcpp (>= 1.0.8), methods (>= 4.2.0)
 LinkingTo: Rcpp (>= 1.0.8), RcppEigen (>= 0.3.3.5.0), BH (>= 1.69.0.1)
 NeedsCompilation: yes
-Packaged: 2022-06-08 02:11:41 UTC; caoj
+Packaged: 2025-12-16 11:36:43 UTC; ripley
 Author: Marc Genton [aut],
   David Keyes [aut],
   George Turkiyyah [aut],
   Jian Cao [aut, cre]
 Maintainer: Jian Cao <jian.cao@kaust.edu.sa>
 Repository: CRAN
-Date/Publication: 2022-06-09 09:40:02 UTC
+Date/Publication: 2025-12-24 07:56:14 UTC

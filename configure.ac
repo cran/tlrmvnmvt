@@ -13,9 +13,9 @@ AC_LANG(C++)
 m4_include([tools/ax_compiler_vendor.m4])
 m4_include([tools/ax_check_compile_flag.m4])
 m4_include([tools/ax_cc_maxopt.m4])
-CXX=`$R_HOME/bin/R CMD config CXX14`
+CXX=`$R_HOME/bin/R CMD config CXX`
 if test "$CXX" = "" ; then
-	AC_MSG_ERROR("CXX14 compiler not found")
+	AC_MSG_ERROR("CXX compiler not found")
 fi
 AX_CC_MAXOPT()
 
